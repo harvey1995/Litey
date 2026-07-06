@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Utensils, RefreshCw, Flame, Calendar, Clock, Trophy, CheckCircle2, X, Download, Upload, ZoomIn, ZoomOut, Type, Search, Pin } from 'lucide-react';
 
-// --- 数据配置区 (根据140斤左右体型调整，增加蔬菜和蛋白质分量) ---
+// --- 数据配置区 (默认根据140斤左右体型调整，增加蔬菜和蛋白质分量) ---
 const STAPLES = [
   { name: '全麦意面', emoji: '🍝', portion: '1小把(干面约70g)' },
   { name: '全麦面包', emoji: '🍞', portion: '2-3片' },
   { name: '杂粮粥', emoji: '🥣', portion: '1大碗' },
   { name: '水煮南瓜', emoji: '🎃', portion: '半个到1个(约250g)' },
   { name: '水煮土豆', emoji: '🥔', portion: '1-2个中等大小' },
+  { name: '水煮玉米', emoji: '🌽', portion: '1大根' },
   { name: '燕麦片', emoji: '🥣', portion: '50g(泡水/奶)' },
-  { name: '甜玉米', emoji: '🌽', portion: '1大根' },
   { name: '糙米饭', emoji: '🍚', portion: '1小碗(约150g)' },
   { name: '紫薯', emoji: '🍠', portion: '1个大(约200g)' },
   { name: '红薯', emoji: '🍠', portion: '1大块(约200g)' },
