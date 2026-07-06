@@ -21,7 +21,7 @@ const VEGGIES = [
   { name: '凉拌木耳', emoji: '🥗', portion: '1大盘(约250g)' },
   { name: '凉拌黄瓜', emoji: '🥒', portion: '1-2大根' },
   { name: '水煮小白菜', emoji: '🥬', portion: '1大盘(约300g)' },
-  { name: '水煮胡萝卜', emoji: '🥕', portion: '2根' },
+  { name: '水煮胡萝卜', emoji: '🥕', portion: '2-3根' },
   { name: '水煮菠菜', emoji: '🥬', portion: '1大盘(约300g，别喝焯的水)' },
   { name: '水煮西兰花', emoji: '🥦', portion: '1大盘(约300g)' },
   { name: '清炒油麦菜', emoji: '🥬', portion: '1大盘(约300g)' },
