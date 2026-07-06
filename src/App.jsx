@@ -297,7 +297,7 @@ function App() {
                       {/* 上下布局的分隔 */}
                       <div className="flex flex-col gap-2 mt-4 w-full border-t border-amber-200/50 pt-3">
                         <a 
-                          href={`https://baike.sogou.com/v249658.htm?fromTitle=${encodeURIComponent(generatedMeal.staple.name)}&from=searchbox&noresult=0`} 
+                          href={`https://www.sogou.com/web?query=${encodeURIComponent(generatedMeal.staple.name)}`} 
                           target="_blank" 
                           rel="noreferrer" 
                           className="w-full flex items-center justify-center text-xs font-medium text-amber-600 hover:text-amber-800 transition-colors py-1"
@@ -326,7 +326,7 @@ function App() {
                       {/* 上下布局的分隔 */}
                       <div className="flex flex-col gap-2 mt-4 w-full border-t border-green-200/50 pt-3">
                         <a 
-                          href={`https://baike.sogou.com/v249658.htm?fromTitle=${encodeURIComponent(generatedMeal.veg.name)}&from=searchbox&noresult=0`} 
+                          href={`https://www.sogou.com/web?query=${encodeURIComponent(generatedMeal.veg.name)}`} 
                           target="_blank" 
                           rel="noreferrer" 
                           className="w-full flex items-center justify-center text-xs font-medium text-green-600 hover:text-green-800 transition-colors py-1"
@@ -355,7 +355,7 @@ function App() {
                       {/* 上下布局的分隔 */}
                       <div className="flex flex-col gap-2 mt-4 w-full border-t border-blue-200/50 pt-3">
                         <a 
-                          href={`https://baike.sogou.com/v249658.htm?fromTitle=${encodeURIComponent(generatedMeal.protein.name)}&from=searchbox&noresult=0`} 
+                          href={`https://www.sogou.com/web?query=${encodeURIComponent(generatedMeal.protein.name)}`} 
                           target="_blank" 
                           rel="noreferrer" 
                           className="w-full flex items-center justify-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors py-1"
