@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Utensils, RefreshCw, Flame, Calendar, Clock, Trophy, CheckCircle2, X, Download, Upload, ZoomIn, ZoomOut, Type, Search, Pin } from 'lucide-react';
 
-// --- 数据配置区 (根据140斤左右减脂/维持期体型调整，增加蔬菜和蛋白质分量) ---
+// --- 数据配置区 (根据140斤左右体型调整，增加蔬菜和蛋白质分量) ---
 const STAPLES = [
   { name: '全麦意面', emoji: '🍝', portion: '1小把(干面约70g)' },
   { name: '全麦面包', emoji: '🍞', portion: '2-3片' },
