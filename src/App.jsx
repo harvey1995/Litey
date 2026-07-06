@@ -61,7 +61,8 @@ const CHEAT_MEALS = [
 
 const MEAL_TYPES = ['早餐', '午餐', '晚餐', '加餐'];
 
-export default function App() {
+// 这里去掉了 export default，解决重复导出报错
+function App() {
   const [history, setHistory] = useState([]);
   const [generatedMeal, setGeneratedMeal] = useState(null);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -568,4 +569,5 @@ export default function App() {
     </div>
   );
 };
+
 export default App;
