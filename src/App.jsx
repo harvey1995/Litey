@@ -3,60 +3,60 @@ import { Utensils, RefreshCw, Flame, Calendar, Clock, Trophy, CheckCircle2, X, D
 
 // --- 数据配置区 (根据140斤左右减脂/维持期体型调整，增加蔬菜和蛋白质分量) ---
 const STAPLES = [
-  { name: '紫薯', emoji: '🍠', portion: '1个大(约200g)' },
-  { name: '糙米饭', emoji: '🍚', portion: '1小碗(约150g)' },
-  { name: '全麦面包', emoji: '🍞', portion: '2-3片' },
-  { name: '甜玉米', emoji: '🌽', portion: '1大根' },
-  { name: '荞麦面', emoji: '🍜', portion: '1大碗(干面约60-80g)' },
-  { name: '水煮南瓜', emoji: '🎃', portion: '半个到1个(约250g)' },
-  { name: '燕麦片', emoji: '🥣', portion: '50g(泡水/奶)' },
-  { name: '水煮土豆', emoji: '🥔', portion: '1-2个中等大小' },
   { name: '全麦意面', emoji: '🍝', portion: '1小把(干面约70g)' },
+  { name: '全麦面包', emoji: '🍞', portion: '2-3片' },
   { name: '杂粮粥', emoji: '🥣', portion: '1大碗' },
+  { name: '水煮南瓜', emoji: '🎃', portion: '半个到1个(约250g)' },
+  { name: '水煮土豆', emoji: '🥔', portion: '1-2个中等大小' },
+  { name: '燕麦片', emoji: '🥣', portion: '50g(泡水/奶)' },
+  { name: '甜玉米', emoji: '🌽', portion: '1大根' },
+  { name: '糙米饭', emoji: '🍚', portion: '1小碗(约150g)' },
+  { name: '紫薯', emoji: '🍠', portion: '1个大(约200g)' },
   { name: '红薯', emoji: '🍠', portion: '1大块(约200g)' },
+  { name: '荞麦面', emoji: '🍜', portion: '1大碗(干面约60-80g)' },
   { name: '藜麦饭', emoji: '🍚', portion: '1小碗(约150g)' }
 ];
 
 const VEGGIES = [
-  { name: '水煮西兰花', emoji: '🥦', portion: '1大盘(约300g)' },
-  { name: '水煮菠菜', emoji: '🥬', portion: '1大盘(约300g，别喝焯的水)' },
+  { name: '凉拌木耳', emoji: '🥗', portion: '1大盘(约250g)' },
   { name: '凉拌黄瓜', emoji: '🥒', portion: '1-2大根' },
-  { name: '鲜切番茄', emoji: '🍅', portion: '2个大番茄' },
-  { name: '生菜沙拉', emoji: '🥗', portion: '1大盆(少沙拉酱)' },
   { name: '水煮小白菜', emoji: '🥬', portion: '1大盘(约300g)' },
   { name: '水煮胡萝卜', emoji: '🥕', portion: '2根' },
-  { name: '烤/煎芦笋', emoji: '🥗', portion: '1大把' },
+  { name: '水煮菠菜', emoji: '🥬', portion: '1大盘(约300g，别喝焯的水)' },
+  { name: '水煮西兰花', emoji: '🥦', portion: '1大盘(约300g)' },
   { name: '清炒油麦菜', emoji: '🥬', portion: '1大盘(约300g)' },
-  { name: '凉拌木耳', emoji: '🥗', portion: '1大盘(约250g)' },
   { name: '清炒西葫芦', emoji: '🥒', portion: '1大盘(约300g)' },
+  { name: '烤/煎芦笋', emoji: '🥗', portion: '1大把' },
+  { name: '生菜沙拉', emoji: '🥗', portion: '1大盆(少沙拉酱)' },
   { name: '金针菇拌黄瓜', emoji: '🥗', portion: '1盘(约250g)' }
+  { name: '鲜切番茄', emoji: '🍅', portion: '2个大番茄' },
 ];
 
 const PROTEINS = [
-  { name: '水煮蛋', emoji: '🥚', portion: '2-3个' },
-  { name: '香煎鸡胸肉', emoji: '🍗', portion: '1大块(约150-200g)' },
-  { name: '清蒸鲈鱼', emoji: '🐟', portion: '1条(约250g)' },
+  { name: '凉拌嫩豆腐', emoji: '🧊', portion: '1大盒(约300g)' },
   { name: '卤护心肉', emoji: '🍖', portion: '1小盘(约150g)' },
-  { name: '炖牛腩肉', emoji: '🍲', portion: '1小碗(约150g，少喝汤)' },
   { name: '卤牛腱子', emoji: '🥩', portion: '7-8片(约150g)' },
+  { name: '无糖希腊酸奶', emoji: '🥛', portion: '1大杯(约200g)配坚果' },
+  { name: '水煮蛋', emoji: '🥚', portion: '2-3个' },
+  { name: '清炒虾仁', emoji: '🍤', portion: '1盘(约150g)' }
+  { name: '清蒸鲈鱼', emoji: '🐟', portion: '1条(约250g)' },
+  { name: '炖牛腩肉', emoji: '🍲', portion: '1小碗(约150g，少喝汤)' },
   { name: '煎牛排', emoji: '🥩', portion: '1整块(约150-200g)' },
   { name: '白灼虾', emoji: '🍤', portion: '12-15只' },
-  { name: '凉拌嫩豆腐', emoji: '🧊', portion: '1大盒(约300g)' },
-  { name: '无糖希腊酸奶', emoji: '🥛', portion: '1大杯(约200g)配坚果' },
   { name: '香煎三文鱼', emoji: '🍣', portion: '1块(约150g)' },
-  { name: '清炒虾仁', emoji: '🍤', portion: '1盘(约150g)' }
+  { name: '香煎鸡胸肉', emoji: '🍗', portion: '1大块(约150-200g)' },
 ];
 
 // 隐藏福利：大于等于6天解锁的欺骗餐 (避开酒类)
 const CHEAT_MEALS = [
   { name: '东北小烧烤', emoji: '🍢', portion: '肉串15串+菜卷(避开大肥肉)' },
-  { name: '潮汕烤冷面', emoji: '🌮', portion: '1大份(少酱少糖)' },
-  { name: '清汤牛肉火锅', emoji: '🍲', portion: '适量鲜牛肉+大量蔬菜+不喝汤' },
-  { name: '麦当劳无包堡', emoji: '🍔', portion: '双层牛肉饼生菜包+零度可乐' },
-  { name: '黄焖鸡', emoji: '🥘', portion: '1份(去皮鸡肉，多吃菜少拌汤)' },
   { name: '四川麻辣烫', emoji: '🥘', portion: '1大碗(多瘦肉蔬菜，清水涮过更佳)' },
+  { name: '汉堡', emoji: '🍔', portion: '双层牛肉饼生菜包+零度可乐' },
   { name: '海鲜自助', emoji: '🦀', portion: '敞开吃海鲜(少吃高糖点心和主食)' },
+  { name: '清汤牛肉火锅', emoji: '🍲', portion: '适量鲜牛肉+大量蔬菜+不喝汤' },
   { name: '炸鸡', emoji: '🍗', portion: '2块吮指原味鸡(去皮)+零度可乐' }
+  { name: '烤冷面', emoji: '🌮', portion: '1大份(少酱少糖)' },
+  { name: '黄焖鸡', emoji: '🥘', portion: '1份(去皮鸡肉，多吃菜少拌汤)' },
 ];
 
 const MEAL_TYPES = ['早餐', '午餐', '晚餐', '加餐'];
