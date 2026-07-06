@@ -28,8 +28,8 @@ const VEGGIES = [
   { name: '清炒西葫芦', emoji: '🥒', portion: '1大盘(约300g)' },
   { name: '烤/煎芦笋', emoji: '🥗', portion: '1大把' },
   { name: '生菜沙拉', emoji: '🥗', portion: '1大盆(少沙拉酱)' },
-  { name: '金针菇拌黄瓜', emoji: '🥗', portion: '1盘(约250g)' }
-  { name: '鲜切番茄', emoji: '🍅', portion: '2个大番茄' },
+  { name: '金针菇拌黄瓜', emoji: '🥗', portion: '1盘(约250g)' },
+  { name: '鲜切番茄', emoji: '🍅', portion: '2个大番茄' }
 ];
 
 const PROTEINS = [
@@ -38,13 +38,13 @@ const PROTEINS = [
   { name: '卤牛腱子', emoji: '🥩', portion: '7-8片(约150g)' },
   { name: '无糖希腊酸奶', emoji: '🥛', portion: '1大杯(约200g)配坚果' },
   { name: '水煮蛋', emoji: '🥚', portion: '2-3个' },
-  { name: '清炒虾仁', emoji: '🍤', portion: '1盘(约150g)' }
+  { name: '清炒虾仁', emoji: '🍤', portion: '1盘(约150g)' },
   { name: '清蒸鲈鱼', emoji: '🐟', portion: '1条(约250g)' },
   { name: '炖牛腩肉', emoji: '🍲', portion: '1小碗(约150g，少喝汤)' },
   { name: '煎牛排', emoji: '🥩', portion: '1整块(约150-200g)' },
   { name: '白灼虾', emoji: '🍤', portion: '12-15只' },
   { name: '香煎三文鱼', emoji: '🍣', portion: '1块(约150g)' },
-  { name: '香煎鸡胸肉', emoji: '🍗', portion: '1大块(约150-200g)' },
+  { name: '香煎鸡胸肉', emoji: '🍗', portion: '1大块(约150-200g)' }
 ];
 
 // 隐藏福利：大于等于6天解锁的欺骗餐 (避开酒类)
@@ -54,9 +54,9 @@ const CHEAT_MEALS = [
   { name: '汉堡', emoji: '🍔', portion: '双层牛肉饼生菜包+零度可乐' },
   { name: '海鲜自助', emoji: '🦀', portion: '敞开吃海鲜(少吃高糖点心和主食)' },
   { name: '清汤牛肉火锅', emoji: '🍲', portion: '适量鲜牛肉+大量蔬菜+不喝汤' },
-  { name: '炸鸡', emoji: '🍗', portion: '2块吮指原味鸡(去皮)+零度可乐' }
+  { name: '炸鸡', emoji: '🍗', portion: '2块吮指原味鸡(去皮)+零度可乐' },
   { name: '烤冷面', emoji: '🌮', portion: '1大份(少酱少糖)' },
-  { name: '黄焖鸡', emoji: '🥘', portion: '1份(去皮鸡肉，多吃菜少拌汤)' },
+  { name: '黄焖鸡', emoji: '🥘', portion: '1份(去皮鸡肉，多吃菜少拌汤)' }
 ];
 
 const MEAL_TYPES = ['早餐', '午餐', '晚餐', '加餐'];
