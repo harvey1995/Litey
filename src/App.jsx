@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Utensils, RefreshCw, Flame, Calendar, Clock, Trophy, CheckCircle2, X, Download, Upload, ZoomIn, ZoomOut } from 'lucide-react';
+import { Utensils, RefreshCw, Flame, Calendar, Clock, Trophy, CheckCircle2, X, Download, Upload, ZoomIn, ZoomOut, Type, Search, Pin } from 'lucide-react';
 
 // --- 数据配置区 (根据140斤左右减脂/维持期体型调整，增加蔬菜和蛋白质分量) ---
 const STAPLES = [
@@ -67,6 +67,7 @@ export default function App() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [showMealSelector, setShowMealSelector] = useState(false);
   const [fontZoom, setFontZoom] = useState(1);
+  const [lockedItems, setLockedItems] = useState({ staple: false, veg: false, protein: false });
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -112,30 +113,30 @@ export default function App() {
 
     let count = 0;
     const maxCount = 15;
+    
     const interval = setInterval(() => {
-      setGeneratedMeal({
-        staple: STAPLES[Math.floor(Math.random() * STAPLES.length)],
-        veg: VEGGIES[Math.floor(Math.random() * VEGGIES.length)],
-        protein: PROTEINS[Math.floor(Math.random() * PROTEINS.length)],
-        isCheat: false
+      setGeneratedMeal(prev => {
+        const current = prev || {};
+        // 锁定后该卡片数据不再更新，也就不会播放闪烁更换的动画
+        return {
+          staple: lockedItems.staple && current.staple ? current.staple : STAPLES[Math.floor(Math.random() * STAPLES.length)],
+          veg: lockedItems.veg && current.veg ? current.veg : VEGGIES[Math.floor(Math.random() * VEGGIES.length)],
+          protein: lockedItems.protein && current.protein ? current.protein : PROTEINS[Math.floor(Math.random() * PROTEINS.length)],
+          isCheat: false
+        };
       });
       count++;
 
       if (count >= maxCount) {
         clearInterval(interval);
-        const rollCheat = isCheatUnlocked && Math.random() < 0.15;
+        
+        const hasLocks = lockedItems.staple || lockedItems.veg || lockedItems.protein;
+        const rollCheat = !hasLocks && isCheatUnlocked && Math.random() < 0.15;
         
         if (rollCheat) {
           setGeneratedMeal({
             isCheat: true,
             cheatData: CHEAT_MEALS[Math.floor(Math.random() * CHEAT_MEALS.length)]
-          });
-        } else {
-          setGeneratedMeal({
-            staple: STAPLES[Math.floor(Math.random() * STAPLES.length)],
-            veg: VEGGIES[Math.floor(Math.random() * VEGGIES.length)],
-            protein: PROTEINS[Math.floor(Math.random() * PROTEINS.length)],
-            isCheat: false
           });
         }
         setIsSpinning(false);
@@ -158,12 +159,14 @@ export default function App() {
     setHistory([newRecord, ...history]);
     setGeneratedMeal(null);
     setShowMealSelector(false);
+    setLockedItems({ staple: false, veg: false, protein: false });
   };
 
   const clearHistory = () => {
-    if(window.confirm('确定要清空所有干饭记录吗？天数也会重置哦！')) {
+    if(window.confirm('确定要清空所有记录吗？天数也会重置哦！')) {
       setHistory([]);
       setGeneratedMeal(null);
+      setLockedItems({ staple: false, veg: false, protein: false });
     }
   }
 
@@ -183,7 +186,7 @@ export default function App() {
 
     const ws = window.XLSX.utils.json_to_sheet(exportData);
     const wb = window.XLSX.utils.book_new();
-    window.XLSX.utils.book_append_sheet(wb, ws, "干饭日记");
+    window.XLSX.utils.book_append_sheet(wb, ws, "记录");
     window.XLSX.writeFile(wb, "今天吃什么_打卡记录.xlsx");
   };
 
@@ -280,37 +283,108 @@ export default function App() {
                     </p>
                   </div>
                 ) : (
+                  // 外层加了 isSpinning 时的统一个模糊过渡效果
                   <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 ${isSpinning ? 'opacity-50 blur-[2px]' : 'opacity-100 blur-0'} transition-all duration-75`}>
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex flex-col items-center text-center shadow-sm">
+                    
+                    {/* 主食 */}
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex flex-col items-center text-center shadow-sm relative">
                       <span className="text-xs font-bold text-amber-600 bg-amber-100 px-2 py-1 rounded-md mb-2 w-full">主食 (碳水)</span>
                       <span className="text-4xl mb-2">{generatedMeal.staple.emoji}</span>
                       <span className="font-bold text-gray-700">{generatedMeal.staple.name}</span>
                       <span className="text-xs text-gray-500 mt-1">{generatedMeal.staple.portion}</span>
+                      
+                      {/* 上下布局的分隔 */}
+                      <div className="flex flex-col gap-2 mt-4 w-full border-t border-amber-200/50 pt-3">
+                        <a 
+                          href={`https://baike.sogou.com/v249658.htm?fromTitle=${encodeURIComponent(generatedMeal.staple.name)}&from=searchbox&noresult=0`} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                          className="w-full flex items-center justify-center text-xs font-medium text-amber-600 hover:text-amber-800 transition-colors py-1"
+                        >
+                          <Search className="w-3.5 h-3.5 mr-1" /> 查看科普
+                        </a>
+                        <div className="h-px w-full bg-amber-200/50"></div>
+                        <button 
+                          disabled={isSpinning}
+                          onClick={() => setLockedItems(p => ({ ...p, staple: !p.staple }))}
+                          className={`w-full flex items-center justify-center text-xs font-medium transition-colors py-1 ${lockedItems.staple ? 'text-amber-700' : 'text-amber-600 hover:text-amber-800'}`}
+                        >
+                          <Pin className={`w-3.5 h-3.5 mr-1 ${lockedItems.staple ? 'fill-current' : ''}`} /> 
+                          {lockedItems.staple ? '已锁定' : '锁定主食'}
+                        </button>
+                      </div>
                     </div>
-                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex flex-col items-center text-center shadow-sm">
+
+                    {/* 蔬菜 */}
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex flex-col items-center text-center shadow-sm relative">
                       <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded-md mb-2 w-full">蔬菜 (纤维)</span>
                       <span className="text-4xl mb-2">{generatedMeal.veg.emoji}</span>
                       <span className="font-bold text-gray-700">{generatedMeal.veg.name}</span>
                       <span className="text-xs text-gray-500 mt-1">{generatedMeal.veg.portion}</span>
+                      
+                      {/* 上下布局的分隔 */}
+                      <div className="flex flex-col gap-2 mt-4 w-full border-t border-green-200/50 pt-3">
+                        <a 
+                          href={`https://baike.sogou.com/v249658.htm?fromTitle=${encodeURIComponent(generatedMeal.veg.name)}&from=searchbox&noresult=0`} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                          className="w-full flex items-center justify-center text-xs font-medium text-green-600 hover:text-green-800 transition-colors py-1"
+                        >
+                          <Search className="w-3.5 h-3.5 mr-1" /> 查看科普
+                        </a>
+                        <div className="h-px w-full bg-green-200/50"></div>
+                        <button 
+                          disabled={isSpinning}
+                          onClick={() => setLockedItems(p => ({ ...p, veg: !p.veg }))}
+                          className={`w-full flex items-center justify-center text-xs font-medium transition-colors py-1 ${lockedItems.veg ? 'text-green-700' : 'text-green-600 hover:text-green-800'}`}
+                        >
+                          <Pin className={`w-3.5 h-3.5 mr-1 ${lockedItems.veg ? 'fill-current' : ''}`} /> 
+                          {lockedItems.veg ? '已锁定' : '锁定蔬菜'}
+                        </button>
+                      </div>
                     </div>
-                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col items-center text-center shadow-sm">
+
+                    {/* 蛋白质 */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col items-center text-center shadow-sm relative">
                       <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-md mb-2 w-full">蛋白质</span>
                       <span className="text-4xl mb-2">{generatedMeal.protein.emoji}</span>
                       <span className="font-bold text-gray-700">{generatedMeal.protein.name}</span>
                       <span className="text-xs text-gray-500 mt-1">{generatedMeal.protein.portion}</span>
+                      
+                      {/* 上下布局的分隔 */}
+                      <div className="flex flex-col gap-2 mt-4 w-full border-t border-blue-200/50 pt-3">
+                        <a 
+                          href={`https://baike.sogou.com/v249658.htm?fromTitle=${encodeURIComponent(generatedMeal.protein.name)}&from=searchbox&noresult=0`} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                          className="w-full flex items-center justify-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors py-1"
+                        >
+                          <Search className="w-3.5 h-3.5 mr-1" /> 查看科普
+                        </a>
+                        <div className="h-px w-full bg-blue-200/50"></div>
+                        <button 
+                          disabled={isSpinning}
+                          onClick={() => setLockedItems(p => ({ ...p, protein: !p.protein }))}
+                          className={`w-full flex items-center justify-center text-xs font-medium transition-colors py-1 ${lockedItems.protein ? 'text-blue-700' : 'text-blue-600 hover:text-blue-800'}`}
+                        >
+                          <Pin className={`w-3.5 h-3.5 mr-1 ${lockedItems.protein ? 'fill-current' : ''}`} /> 
+                          {lockedItems.protein ? '已锁定' : '锁定蛋白'}
+                        </button>
+                      </div>
                     </div>
+
                   </div>
                 )}
               </div>
             )}
           </div>
 
-          <div className="mt-8 w-full flex flex-col md:flex-row gap-4 justify-center">
+          <div className="mt-8 w-full flex flex-col md:flex-row gap-4 justify-center h-[56px]">
             {!generatedMeal ? (
               <button
                 onClick={spin}
                 disabled={isSpinning}
-                className="w-full md:w-2/3 py-4 rounded-full font-bold text-xl text-white shadow-lg bg-green-500 hover:bg-green-600 transform transition-all active:scale-95 disabled:bg-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:active:scale-100 disabled:text-gray-200"
+                className="w-full md:w-2/3 h-full rounded-full font-bold text-xl text-white shadow-lg bg-green-500 hover:bg-green-600 transform transition-all active:scale-95 disabled:bg-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:active:scale-100 disabled:text-gray-200 flex items-center justify-center"
               >
                 开始生成今天吃什么
               </button>
@@ -319,24 +393,24 @@ export default function App() {
                 <button
                   onClick={spin}
                   disabled={isSpinning}
-                  className="flex-1 py-3 md:py-4 rounded-full font-bold text-lg text-green-600 bg-green-100 border border-green-200 hover:bg-green-200 transform transition-all active:scale-95 flex items-center justify-center disabled:bg-gray-200 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed disabled:active:scale-100"
+                  className="flex-1 h-full rounded-full font-bold text-lg text-green-600 bg-green-100 border border-green-200 hover:bg-green-200 transform transition-all active:scale-95 flex items-center justify-center disabled:bg-gray-200 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed disabled:active:scale-100"
                 >
                   <RefreshCw className={`w-5 h-5 mr-2 ${isSpinning ? 'animate-spin' : ''}`} /> 
                   再随一个
                 </button>
                 
-                <div className="flex-1 relative">
+                <div className="flex-1 relative h-full">
                   {!showMealSelector ? (
                     <button
                       onClick={() => setShowMealSelector(true)}
                       disabled={isSpinning}
-                      className="w-full py-3 md:py-4 rounded-full font-bold text-lg text-white bg-green-500 hover:bg-green-600 shadow-md hover:shadow-lg transform transition-all active:scale-95 flex items-center justify-center disabled:bg-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:active:scale-100 disabled:text-gray-200"
+                      className="w-full h-full rounded-full font-bold text-lg text-white bg-green-500 hover:bg-green-600 shadow-md hover:shadow-lg transform transition-all active:scale-95 flex items-center justify-center disabled:bg-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:active:scale-100 disabled:text-gray-200"
                     >
                       <CheckCircle2 className="w-5 h-5 mr-2" />
                       就吃这个
                     </button>
                   ) : (
-                    <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-xl shadow-xl border border-gray-100 p-2 animate-in slide-in-from-bottom-2">
+                    <div className="absolute bottom-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-xl shadow-xl border border-gray-100 p-2 animate-in slide-in-from-bottom-2 z-20">
                       <div className="flex justify-between items-center px-2 pb-2 mb-2 border-b border-gray-100">
                         <span className="text-sm font-bold text-gray-600">这是哪一顿？</span>
                         <button onClick={() => setShowMealSelector(false)} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4"/></button>
@@ -364,23 +438,30 @@ export default function App() {
           <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100 flex-wrap gap-y-2">
             <h2 className="text-xl font-bold text-gray-700 flex items-center">
               <Calendar className="w-5 h-5 mr-2 text-green-500" />
-              干饭日记
+              记录
             </h2>
             <div className="flex items-center space-x-2">
-              <button 
-                onClick={() => setFontZoom(prev => Math.min(prev + 0.1, 1.5))}
-                className="flex items-center text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors bg-gray-50 px-2.5 py-1.5 rounded-lg border border-gray-200"
-                title="放大字体"
-              >
-                <ZoomIn className="w-3 h-3" />
-              </button>
-              <button 
-                onClick={() => setFontZoom(prev => Math.max(prev - 0.1, 0.7))}
-                className="flex items-center text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors bg-gray-50 px-2.5 py-1.5 rounded-lg border border-gray-200"
-                title="缩小字体"
-              >
-                <ZoomOut className="w-3 h-3" />
-              </button>
+              
+              <div className="flex items-center bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
+                <span className="px-2 text-xs font-medium text-gray-400 bg-gray-100 border-r border-gray-200 hidden sm:block">
+                  字号
+                </span>
+                <button 
+                  onClick={() => setFontZoom(prev => Math.max(prev - 0.1, 0.7))}
+                  className="flex items-center text-xs font-medium text-gray-600 hover:text-gray-900 transition-colors px-2.5 py-1.5 hover:bg-gray-100"
+                  title="缩小字体"
+                >
+                  <Type className="w-3 h-3 mr-0.5" />-
+                </button>
+                <div className="w-px h-4 bg-gray-200"></div>
+                <button 
+                  onClick={() => setFontZoom(prev => Math.min(prev + 0.1, 1.5))}
+                  className="flex items-center text-xs font-medium text-gray-600 hover:text-gray-900 transition-colors px-2.5 py-1.5 hover:bg-gray-100"
+                  title="放大字体"
+                >
+                  <Type className="w-3.5 h-3.5 mr-0.5" />+
+                </button>
+              </div>
               
               <button 
                 onClick={() => fileInputRef.current.click()}
@@ -442,18 +523,18 @@ export default function App() {
                           {record.meal.isCheat ? (
                             <div className="flex items-center text-gray-700" style={{ fontSize: `${0.875 * fontZoom}rem` }}>
                               <span className="mr-2" style={{ fontSize: `${1.125 * fontZoom}rem` }}>{record.meal.cheatData.emoji}</span>
-                              <span className="font-medium text-orange-600">[奖励餐] {record.meal.cheatData.name}</span>
+                              <span className="font-bold text-orange-600">[奖励餐] {record.meal.cheatData.name}</span>
                             </div>
                           ) : (
                             <div className="text-gray-700 leading-relaxed" style={{ fontSize: `${0.875 * fontZoom}rem` }}>
                               <div className="flex items-center mb-1">
-                                <span className="mr-1" style={{ fontSize: `${1 * fontZoom}rem` }}>{record.meal.staple.emoji}</span> {record.meal.staple.name}
+                                <span className="mr-1" style={{ fontSize: `${1 * fontZoom}rem` }}>{record.meal.staple.emoji}</span> <span className="font-bold">{record.meal.staple.name}</span>
                               </div>
                               <div className="flex items-center mb-1">
-                                <span className="mr-1" style={{ fontSize: `${1 * fontZoom}rem` }}>{record.meal.veg.emoji}</span> {record.meal.veg.name}
+                                <span className="mr-1" style={{ fontSize: `${1 * fontZoom}rem` }}>{record.meal.veg.emoji}</span> <span className="font-bold">{record.meal.veg.name}</span>
                               </div>
                               <div className="flex items-center">
-                                <span className="mr-1" style={{ fontSize: `${1 * fontZoom}rem` }}>{record.meal.protein.emoji}</span> {record.meal.protein.name}
+                                <span className="mr-1" style={{ fontSize: `${1 * fontZoom}rem` }}>{record.meal.protein.emoji}</span> <span className="font-bold">{record.meal.protein.name}</span>
                               </div>
                             </div>
                           )}
